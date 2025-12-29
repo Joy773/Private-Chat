@@ -3,8 +3,12 @@ import { useMutation } from "@tanstack/react-query";
 import { client } from "@/lib/client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useUsername } from "@/hooks/use-username";
+import { Suspense } from "react";
 
-export default function Home() {
+// Force dynamic rendering to avoid prerendering issues
+export const dynamic = 'force-dynamic';
+
+function HomeContent() {
   const {username} = useUsername();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -69,5 +73,24 @@ export default function Home() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={
+      <main className="flex min-h-screen flex-col items-center justify-center p-4">
+        <div className="w-full max-w-md space-y-8">
+          <div className="text-center space-y-2">
+            <h1 className="text-2xl font-bold tracking-tight text-green-500">
+              {">"}Private_Chat
+            </h1>
+            <p className="text-zinc-500 ">Loading...</p>
+          </div>
+        </div>
+      </main>
+    }>
+      <HomeContent />
+    </Suspense>
   );
 }

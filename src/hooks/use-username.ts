@@ -14,6 +14,9 @@ const generateUsername = () => {
 };
     const [username, setUsername] = useState("")
     useEffect(() => {
+        // Only access localStorage on client side
+        if (typeof window === 'undefined') return;
+        
         const main = () => {
           const stored = localStorage.getItem(STORAGE_KEY);
     
